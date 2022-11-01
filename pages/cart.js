@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import Layout from "../components/Layout";
 import Link from 'next/link';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 import { Store } from '../utils/Store';
 
@@ -14,6 +14,15 @@ const CartScreen = () => {
         dispatch({
             type: 'CART_REMOVE_ITEM',
             payload: item
+        })
+    }
+
+    const updateCartHandler = (item, qty) => {
+        const quantity = Number(qty);
+
+        dispatch({
+            type: 'CART_ADD_ITEM',
+            payload: { ...item, quantity }
         })
     }
 
@@ -39,8 +48,16 @@ const CartScreen = () => {
                         {cartItems.map((item) => (
                             <div key={item.slug}>
                                 <div>
+                                    <span>quantity:</span>
+                                    <select
+                                        value={item.quantity}
+                                        onChange={(e) => updateCartHandler(item, e.target.value)}>
+                                        {[...Array.from(item.countInStock).keys()].map(x => (
+                                            <option key={x + 1} value={x + 1}>{x + 1}</option>
+                                        ))}
+                                    </select>
                                     <Link href={`/product/${item.slug}`}>
-                                        name: {item.name} / quantity: {item.quantity} / {item.price}$
+                                        name: {item.name}  / {item.price}$
                                     </Link>
                                     <button onClick={() => removeItemHandler(item)}><b>X</b></button>
                                 </div>
@@ -52,10 +69,10 @@ const CartScreen = () => {
 
             <ul>
                 <li>
-                    subtotal: {cartItems.reduce((a, c) => a + c.quantity, 0)}
+                    subtotal: {cartItems.reduce((a, c) => a + c.quantity, 0)}$
                 </li>
                 <li>
-                    total: {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
+                    total: {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}$
                 </li>
 
                 {/* redirect to checkout */}
