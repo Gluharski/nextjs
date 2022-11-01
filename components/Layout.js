@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from 'next/link';
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Store } from "../utils/Store";
 import styles from '../styles/Header.module.css';
@@ -8,6 +8,11 @@ import styles from '../styles/Header.module.css';
 export default function Layout({ title, children }) {
     const { state, dispatch } = useContext(Store);
     const { cart } = state;
+    const [cartItemsCount, setCartItemsCount] = useState(0);
+
+    useEffect(() => {
+        setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0))
+    }, [cart.cartItems]);
 
     return (
         <>
@@ -37,9 +42,9 @@ export default function Layout({ title, children }) {
                         Cart
 
                         <span>
-                            {cart.cartItems.length > 0 &&
+                            {cartItemsCount > 0 &&
                                 <span className={styles.amount}>
-                                    {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
+                                    {cartItemsCount}
                                 </span>
                             }
                         </span>

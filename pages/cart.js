@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { Store } from '../utils/Store';
+import dynamic from "next/dynamic";
 
 const CartScreen = () => {
     const router = useRouter();
@@ -84,4 +85,5 @@ const CartScreen = () => {
     )
 }
 
-export default CartScreen;
+// render only in client side
+export default dynamic(() => Promise.resolve((CartScreen), { ssr: false }));
