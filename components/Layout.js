@@ -1,8 +1,14 @@
 import Head from "next/head";
 import Link from 'next/link';
+import { useContext } from "react";
+
+import { Store } from "../utils/Store";
 import styles from '../styles/Header.module.css';
 
 export default function Layout({ title, children }) {
+    const { state, dispatch } = useContext(Store);
+    const { cart } = state;
+
     return (
         <>
             <Head>
@@ -26,6 +32,14 @@ export default function Layout({ title, children }) {
                         </div>
                         <Link href='/login'>Login</Link>
                     </nav>
+
+                    <div>
+                        {cart.cartItems.length > 0 &&
+                            <span>
+                                {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
+                            </span>
+                        }
+                    </div>
                 </header>
 
                 <main>{children}</main>

@@ -1,11 +1,15 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { useContext } from 'react';
 
+import styles from '../../styles/ProductDetailsWrapper.module.css';
 import Layout from '../../components/Layout';
 import data from '../../utils/data';
-import styles from '../../styles/ProductDetailsWrapper.module.css';
+import { Store } from '../../utils/Store';
 
 const ProductScreen = () => {
+    const { state, dispatch } = useContext(Store);
+
     const { query } = useRouter();
     const { slug } = query;
 
@@ -13,6 +17,25 @@ const ProductScreen = () => {
 
     if (!product) {
         return <div>Product Not Found</div>
+    }
+
+    const addToCardHandler = () => {
+        const existItem = state.cart.cartItems.find((x) => x.slug === product.slug);
+        const quantity = existItem ? existItem.quantity + 1 : 1;
+
+        if( product.countInStock < quantity) {
+            alert('Sorry, this product is out of stock!');
+
+            return;
+        }
+        
+        dispatch({
+            type: 'CART_ADD_ITEM',
+            payload: {
+                ...product,
+                quantity
+            }
+        })
     }
 
     return (
@@ -35,14 +58,16 @@ const ProductScreen = () => {
                         <li><b>Category</b>: {product.category}</li>
                         <li><b>Description</b> :{product.description}</li>
                         <li><b>Status</b>:
-                            {product.countInStock > 0 
-                            ? ' in stock' 
-                            : ' unavailable'
-                        }
+                            {product.countInStock > 0
+                                ? ' in stock'
+                                : ' unavailable'
+                            }
                         </li>
                     </ul>
 
-                    <Link href="/card">add to card</Link>
+                    <button onClick={addToCardHandler}>
+                        add to card
+                    </button>
                 </div>
             </div>
         </Layout>
