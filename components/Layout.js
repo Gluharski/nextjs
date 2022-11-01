@@ -33,13 +33,17 @@ export default function Layout({ title, children }) {
                         <Link href='/login'>Login</Link>
                     </nav>
 
-                    <div>
-                        {cart.cartItems.length > 0 &&
-                            <span>
-                                {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
-                            </span>
-                        }
-                    </div>
+                    <Link href='/cart' className={styles.cart}>
+                        Cart
+
+                        <span>
+                            {cart.cartItems.length > 0 &&
+                                <span className={styles.amount}>
+                                    {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
+                                </span>
+                            }
+                        </span>
+                    </Link>
                 </header>
 
                 <main>{children}</main>

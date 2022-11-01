@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import Link from 'next/link';
 import { useContext } from 'react';
 
@@ -9,7 +9,7 @@ import { Store } from '../../utils/Store';
 
 const ProductScreen = () => {
     const { state, dispatch } = useContext(Store);
-
+    const router = useRouter();
     const { query } = useRouter();
     const { slug } = query;
 
@@ -25,8 +25,7 @@ const ProductScreen = () => {
 
         if( product.countInStock < quantity) {
             alert('Sorry, this product is out of stock!');
-
-            return;
+            // return;
         }
         
         dispatch({
@@ -36,8 +35,10 @@ const ProductScreen = () => {
                 quantity
             }
         })
+        
+        router.push('/cart');
     }
-
+    
     return (
         <Layout title={product.name}>
             <button type='button'>

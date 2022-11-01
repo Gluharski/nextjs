@@ -20,7 +20,7 @@ const ProductItem = ({ product }) => {
             </div>
 
             <button type='button'>
-                Add to card
+                <Link href='/cart'>add to cart</Link>
             </button>
         </div>
     )
