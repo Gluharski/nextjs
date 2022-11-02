@@ -45,17 +45,15 @@ const CartScreen = () => {
                         <button>
                             <Link href='/'>back to shopping</Link>
                         </button>
-
                     </div>)
-                    : (<div>
+                    : (<table border={1}>
                         <thead>
                             <tr>
-                                <td>Title</td>
-                                <td>description</td>
-                                <td>quantity</td>
-                                <td>price</td>
-                                <td></td>
-                                <td></td>
+                                <th>Title</th>
+                                <th>quantity</th>
+                                <th>price</th>
+                                <th>description</th>
+                                <th>remove</th>
                             </tr>
                         </thead>
                         {cartItems.map((item) => (
@@ -80,7 +78,6 @@ const CartScreen = () => {
                                     </td>
                                     <td>
                                         <Link href={`/product/${item.slug}`}>
-                                            {/* <BsList /> */}
                                             details
                                         </Link>
                                     </td>
@@ -90,7 +87,7 @@ const CartScreen = () => {
                                 </tr>
                             </tbody>
                         ))}
-                    </div>)
+                    </table>)
                 }
             </div>
 
