@@ -2,6 +2,8 @@ import { useContext } from "react";
 import Layout from "../components/Layout";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { BsList } from 'react-icons/bs';
 
 import { Store } from '../utils/Store';
 import dynamic from "next/dynamic";
@@ -46,23 +48,47 @@ const CartScreen = () => {
 
                     </div>)
                     : (<div>
+                        <thead>
+                            <tr>
+                                <td>Title</td>
+                                <td>description</td>
+                                <td>quantity</td>
+                                <td>price</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </thead>
                         {cartItems.map((item) => (
-                            <div key={item.slug}>
-                                <div>
-                                    <span>quantity:</span>
-                                    <select
-                                        value={item.quantity}
-                                        onChange={(e) => updateCartHandler(item, e.target.value)}>
-                                        {[...Array.from(item.countInStock).keys()].map(x => (
-                                            <option key={x + 1} value={x + 1}>{x + 1}</option>
-                                        ))}
-                                    </select>
-                                    <Link href={`/product/${item.slug}`}>
-                                        name: {item.name}  / {item.price}$
-                                    </Link>
-                                    <button onClick={() => removeItemHandler(item)}><b>X</b></button>
-                                </div>
-                            </div>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {item.name}
+                                    </td>
+                                    <td>
+                                        <select
+                                            value={item.quantity}
+                                            onChange={(e) => updateCartHandler(item, e.target.value)}>
+                                            {[...Array.from(item.countInStock).keys()]
+                                                .map(x => (
+                                                    <option key={x + 1} value={x + 1}>{x + 1}</option>
+                                                ))
+                                            }
+                                        </select>
+                                    </td>
+                                    <td>
+                                        {item.price}
+                                    </td>
+                                    <td>
+                                        <Link href={`/product/${item.slug}`}>
+                                            {/* <BsList /> */}
+                                            details
+                                        </Link>
+                                    </td>
+                                    <td>
+                                        <AiOutlineCloseCircle onClick={() => removeItemHandler(item)} />
+                                    </td>
+                                </tr>
+                            </tbody>
                         ))}
                     </div>)
                 }
@@ -76,8 +102,7 @@ const CartScreen = () => {
                     total: {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}$
                 </li>
 
-                {/* redirect to checkout */}
-                <button onClick={() => router.push('/shipping')}>
+                <button onClick={() => router.push('login?redirect=/shipping')}>
                     Check Out
                 </button>
             </ul>
