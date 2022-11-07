@@ -4,14 +4,19 @@ import Cookies from "js-cookie";
 export const Store = createContext();
 
 const initialState = {
-    // setting cookies
+    // cart items
     cart: Cookies.get('cart')
         ? JSON.parse(Cookies.get('cart'))
-        : { cartItems: [] }
+        : { cartItems: [] },
+
+    // theme
+    darkMode: Cookies.get('darkMode') === 'ON' ? true : false,
 };
 
 function reducer(state, action) {
     switch (action.type) {
+
+        // CART ACTIONS
         case 'CART_ADD_ITEM': {
             const newItem = action.payload;
             const existItem = state.cart.cartItems.find((item) => item.slug === newItem.slug);
@@ -22,7 +27,6 @@ function reducer(state, action) {
                 : [...state.cart.cartItems, newItem]
 
             Cookies.set('cart', JSON.stringify({ ...state.cart, cartItems })) // update cookie for cart key
-
             return { ...state, cart: { ...state.cart, cartItems } }
         }
         case 'CART_REMOVE_ITEM': {
@@ -31,9 +35,14 @@ function reducer(state, action) {
             );
 
             Cookies.set('cart', JSON.stringify({ ...state.cart, cartItems })) // update cookie for cart key
-
             return { ...state, cart: { ...state.cart, cartItems } }
         }
+
+        // THEME ACTIONS
+        case 'DARK_MODE_ON':
+            return { ...state, darkMode: true }
+        case 'DARK_MODE_OFF':
+            return { ...state, darkMode: false }
         default:
             return state;
     }

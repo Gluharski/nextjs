@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from 'next/link';
 import { useContext, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 import { Store } from "../utils/Store";
 import styles from '../styles/Header.module.css';
@@ -8,11 +9,19 @@ import styles from '../styles/Header.module.css';
 export default function Layout({ title, children }) {
     const { state, dispatch } = useContext(Store);
     const { cart } = state;
+    const { darkMode } = state;
     const [cartItemsCount, setCartItemsCount] = useState(0);
 
     useEffect(() => {
         setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0))
     }, [cart.cartItems]);
+
+    const darkModeChangeHandler = () => {
+        dispatch({ type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON'});
+
+        const newDarkMode = !darkMode;
+        Cookies.set('darkMode', newDarkMode ? 'ON' : 'OFF');
+    }
 
     return (
         <>
@@ -21,7 +30,13 @@ export default function Layout({ title, children }) {
             </Head>
 
             <section className={styles.wrapper}>
-                <header className={styles.headerNavbar}>
+                {/* inline styles are bad practice => change styles if possible */}
+                <header style={{
+                    padding: '10px',
+                    borderBottom: '2px solid red',
+                    backgroundColor: darkMode ? 'black' : 'white',
+                    color: darkMode ? 'white' : 'black'
+                }}>
                     <nav>
                         <div>
                             <Link href='/'>
@@ -49,9 +64,12 @@ export default function Layout({ title, children }) {
                             }
                         </span>
                     </Link>
+
+                    <button onClick={darkModeChangeHandler}>change theme</button>
                 </header>
 
                 <main>{children}</main>
+
                 <footer>footer</footer>
             </section>
         </>
